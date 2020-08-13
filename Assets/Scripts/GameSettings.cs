@@ -7,6 +7,7 @@ public class GameSettings : MonoBehaviour
     // Singleton
     public static GameSettings instance;
 
+    // Local memory
     public int difficulty;
     public float soundVolume;
     public float musicVolume;
@@ -28,6 +29,15 @@ public class GameSettings : MonoBehaviour
 
     public void SaveData(SettingsData data)
     {
+        GameData saveData = new GameData();
+        saveData.difficulty = data.difficulty;
+        saveData.soundVolume = data.soundVolume;
+        saveData.musicVolume = data.musicVolume;
+        saveData.playerName = data.playerName;
+
+        DataPersistence.SaveGameData(saveData);
+
+        // Store them in memory too for debugging purposes
         difficulty = data.difficulty;
         soundVolume = data.soundVolume;
         musicVolume = data.musicVolume;
@@ -35,12 +45,21 @@ public class GameSettings : MonoBehaviour
     }
     public SettingsData LoadData()
     {
-        SettingsData data;
-        data.difficulty = difficulty;
-        data.soundVolume = soundVolume;
-        data.musicVolume = musicVolume;
-        data.playerName = playerName;
-        return data;
+        GameData data = DataPersistence.LoadGameData();
+
+        SettingsData settingsData = new SettingsData();
+        settingsData.difficulty = data.difficulty;
+        settingsData.soundVolume = data.soundVolume;
+        settingsData.musicVolume = data.musicVolume;
+        settingsData.playerName = data.playerName;
+
+        // Load into memory too for debugging purposes
+        difficulty = data.difficulty;
+        soundVolume = data.soundVolume;
+        musicVolume = data.musicVolume;
+        playerName = data.playerName;
+
+        return settingsData;
     }
 }
 
